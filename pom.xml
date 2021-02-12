@@ -6,7 +6,7 @@
 
     <groupId>com.cybxsecurity</groupId>
     <artifactId>jwt</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>JSON Web Token (Java Library)</name>
     <description>A hardened implementation of JSON Web Token RFC 7519.</description>
     <properties>

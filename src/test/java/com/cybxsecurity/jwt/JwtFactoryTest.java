@@ -34,7 +34,7 @@ class JwtFactoryTest {
 
     @Test
     void getParams() {
-        final JwtFactoryParams params = new InMemParams();
+        final JwtFactoryParams params = new ConfigurableJwtFactoryParams();
         final JwtFactory factory = new JwtFactory();
         factory.setParams(params);
         assertEquals(params, factory.getParams());
@@ -65,7 +65,7 @@ class JwtFactoryTest {
 
     @Test
     void createParseVerifyEncrypted() {
-        final InMemParams params = new InMemParams();
+        final ConfigurableJwtFactoryParams params = new ConfigurableJwtFactoryParams();
         params.setEncryption(JwtEncryption.AES_CTS);
 
         final JwtHeaderClaims header = new JwtHeaderClaims();
@@ -92,7 +92,7 @@ class JwtFactoryTest {
 
     @Test
     void parseInvalidIssuer() {
-        final InMemParams params = new InMemParams();
+        final ConfigurableJwtFactoryParams params = new ConfigurableJwtFactoryParams();
         params.setIssuer("Something");
 
         final JwtClaims payload = new JwtClaims();
@@ -113,7 +113,7 @@ class JwtFactoryTest {
 
     @Test
     void parseInvalidAudience() {
-        final InMemParams params = new InMemParams();
+        final ConfigurableJwtFactoryParams params = new ConfigurableJwtFactoryParams();
         params.setAudience("Something");
 
         final JwtClaims payload = new JwtClaims();
@@ -134,7 +134,7 @@ class JwtFactoryTest {
 
     @Test
     void parseInvalidSubject() {
-        final InMemParams params = new InMemParams();
+        final ConfigurableJwtFactoryParams params = new ConfigurableJwtFactoryParams();
         params.setSubject("Something");
 
         final JwtClaims payload = new JwtClaims();
@@ -155,7 +155,7 @@ class JwtFactoryTest {
 
     @Test
     void parseInvalidNotBefore() {
-        final InMemParams params = new InMemParams();
+        final ConfigurableJwtFactoryParams params = new ConfigurableJwtFactoryParams();
         params.setNotBefore(-1000); // puts not before into the future
 
         final JwtClaims payload = new JwtClaims();
@@ -175,7 +175,7 @@ class JwtFactoryTest {
 
     @Test
     void parseInvalidNotAfter() throws InterruptedException {
-        final InMemParams params = new InMemParams();
+        final ConfigurableJwtFactoryParams params = new ConfigurableJwtFactoryParams();
         params.setNotAfter(1); // puts not after into the past
 
         final JwtClaims payload = new JwtClaims();
@@ -193,90 +193,5 @@ class JwtFactoryTest {
         factory.verify(unverified, signKey);
         Thread.sleep(2000);
         assertThrows(JwtExpirationException.class, () -> factory.verify(unverified, signKey));
-    }
-
-
-
-    static class InMemParams implements JwtFactoryParams {
-        private String mIssuer;
-        private String mAudience;
-        private String mSubject;
-        private JwtSignature mSignature;
-        private JwtEncryption mEncryption;
-        private long mNotBefore;
-        private long mNotAfter;
-        private boolean mGenerateId;
-
-        @Override
-        public String getIssuer() {
-            return mIssuer;
-        }
-
-        public void setIssuer(String issuer) {
-            mIssuer = issuer;
-        }
-
-        @Override
-        public String getAudience() {
-            return mAudience;
-        }
-
-        public void setAudience(String audience) {
-            mAudience = audience;
-        }
-
-        @Override
-        public String getSubject() {
-            return mSubject;
-        }
-
-        public void setSubject(String subject) {
-            mSubject = subject;
-        }
-
-        @Override
-        public JwtSignature getSignature() {
-            return mSignature;
-        }
-
-        public void setSignature(JwtSignature signature) {
-            mSignature = signature;
-        }
-
-        @Override
-        public JwtEncryption getEncryption() {
-            return mEncryption;
-        }
-
-        public void setEncryption(JwtEncryption encryption) {
-            mEncryption = encryption;
-        }
-
-        @Override
-        public long getNotBefore() {
-            return mNotBefore;
-        }
-
-        public void setNotBefore(long notBefore) {
-            mNotBefore = notBefore;
-        }
-
-        @Override
-        public long getNotAfter() {
-            return mNotAfter;
-        }
-
-        public void setNotAfter(long notAfter) {
-            mNotAfter = notAfter;
-        }
-
-        @Override
-        public boolean isGenerateId() {
-            return mGenerateId;
-        }
-
-        public void setGenerateId(boolean generateId) {
-            mGenerateId = generateId;
-        }
     }
 }

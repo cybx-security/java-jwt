@@ -13,6 +13,74 @@ using the AES algorithm.
 ## Prerequisites
 - Java 8 JDK
 
+## Usage Examples
+
+### Setting configuration for all jwts
+```java
+// Create the configuration to use with the factory
+final ConfigurableJwtFactoryParams params = new ConfigurableJwtFactoryParams();
+params.setSignature(JwtSignature.EC256);
+params.setEncryption(JwtEncryption.AES_CTR);
+params.setIssuer("Sample Issuer");
+params.setAudience("Sample Audience");
+params.setSubject("Sample Subject");
+params.setNotBefore(System.currentTimeMillis());
+params.setNotAfter(System.currentTimeMillis() + (1000 * 60 * 60 * 2));
+params.setGenerateId(false);
+```
+
+### Creating a jwt
+```java
+// Access the configuration for jwt
+// Create the factory with configuration
+final JwtFactory factory = new JwtFactory();
+factory.setParams(getJwtFactoryParams());
+
+// Create the header claims of the token
+final JwtHeaderClaims header = new JwtHeaderClaims();
+header.setIssuer("something"); // overridden by factory params
+header.setAudience("something"); // overridden by factory params
+header.put("Custom", "abc123");
+
+// Create the payload claims of the token
+final JwtClaims payload = new JwtClaims();
+payload.put("customA", 123);
+payload.put("customB", "something");
+
+// Create and sign a jwt with the factory
+final Key signKey = getSuperSecretKey();
+final String jwt = factory.create(header, payload, signKey);
+
+System.out.println(jwt);
+```
+
+### Creating an encrypted jwt
+```java
+// Access the configuration for jwt
+// Create the factory with configuration
+final JwtFactory factory = new JwtFactory();
+factory.setParams(getJwtFactoryParams());
+
+// Create the header claims of the token
+final JwtHeaderClaims header = new JwtHeaderClaims();
+header.setIssuer("something"); // overridden by factory params
+header.setAudience("something"); // overridden by factory params
+header.put("Custom", "abc123");
+
+// Create the payload claims of the token
+final JwtClaims payload = new JwtClaims();
+payload.put("customA", 123);
+payload.put("customB", "something");
+
+// Create and sign a jwt with the factory
+final Key signKey = getSuperSecretKey();
+final Key cryptKey = getSuperSecretEncryptionKey();
+final String jwt = factory.create(header, payload, signKey, cryptKey);
+
+System.out.println(jwt);
+```
+
+
 ## Contributors
 - Tyler Suehr (tyler.suehr@cybxsecurity.com)
 

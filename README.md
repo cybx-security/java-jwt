@@ -80,6 +80,52 @@ final String jwt = factory.create(header, payload, signKey, cryptKey);
 System.out.println(jwt);
 ```
 
+### Parsing and verifying a jwt
+```java
+// Access the encoded jwt
+final String jwt = getJwt();
+
+// Access the configuration for jwt
+// Create the factory with configuration
+final JwtFactory factory = new JwtFactory();
+factory.setParams(getJwtFactoryParams());
+
+// Parse the jwt encoded string
+// This allows you to access claims without
+// having verified them yet... please remember
+// to verify them!
+final UnverifiedClaims claims = factory.parse(claims);
+final JwtHeaderClaims header = claims.getHeaderClaims();
+final JwtClaims payload = claims.getPayloadClaims();
+
+// Verify the claims when ready
+final Key signKey = getSuperSecretKey();
+factory.verify(claims, signKey);
+```
+
+### Parsing and verifying an encrypted jwt
+```java
+// Access the encoded jwt
+final String jwt = getJwt();
+
+// Access the configuration for jwt
+// Create the factory with configuration
+final JwtFactory factory = new JwtFactory();
+factory.setParams(getJwtFactoryParams());
+
+// Parse the jwt encoded string
+// This allows you to access claims without
+// having verified them yet... please remember
+// to verify them!
+final Key cryptKey = getSuperSecretEncryptionKey();
+final UnverifiedClaims claims = factory.parse(claims, cryptKey);
+final JwtHeaderClaims header = claims.getHeaderClaims();
+final JwtClaims payload = claims.getPayloadClaims();
+
+// Verify the claims when ready
+final Key signKey = getSuperSecretKey();
+factory.verify(claims, signKey);
+```
 
 ## Contributors
 - Tyler Suehr (tyler.suehr@cybxsecurity.com)

@@ -15,7 +15,7 @@ using the AES algorithm.
 
 ## Usage Examples
 
-### Setting configuration for all jwts
+### Setup factory configuration
 ```java
 // Create the configuration to use with the factory
 final ConfigurableJwtFactoryParams params = new ConfigurableJwtFactoryParams();

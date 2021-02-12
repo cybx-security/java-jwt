@@ -15,6 +15,15 @@ using the AES algorithm.
 
 ## Usage Examples
 
+### Add to `pom.xml`
+```xml
+<dependency>
+  <groupId>com.cybxsecurity</groupId>
+  <artifactId>jwt</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+
 ### Setup factory configuration
 ```java
 // Create the configuration to use with the factory

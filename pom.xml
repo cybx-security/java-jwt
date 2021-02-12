@@ -50,4 +50,13 @@
             <version>2.8.6</version>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>java-jwt</id>
+            <name>JWT Java Library</name>
+            <url>https://maven.pkg.github.com/cybx-security/java-jwt</url>
+        </repository>
+    </distributionManagement>
+
 </project>

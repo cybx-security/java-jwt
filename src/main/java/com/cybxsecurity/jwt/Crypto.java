@@ -1,19 +1,3 @@
-/*
- * Copyright (c) 2021 CybXSecurity LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.cybxsecurity.jwt;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -27,8 +11,8 @@ import java.security.*;
  * Encapsulated cryptography logic used by this library.
  * @author Tyler Suehr
  */
-abstract class JwtCrypto {
-    private JwtCrypto() {}
+class Crypto {
+    private Crypto() {}
 
     /**
      * Cryptographically signs content with supported algorithm.
@@ -40,7 +24,7 @@ abstract class JwtCrypto {
      * @return the signature
      * @throws IllegalStateException if signature could not be computed
      */
-    static byte[] sign(JwtSignature alg, Key signKey, byte[] content) {
+    static byte[] sign(SignatureType alg, Key signKey, byte[] content) {
         try {
             if (signKey instanceof PrivateKey) {
                 final PrivateKey privateKey = (PrivateKey) signKey;
@@ -80,7 +64,7 @@ abstract class JwtCrypto {
      *
      * @return true if verified, otherwise false
      */
-    static boolean verify(JwtSignature alg, Key verifyKey, byte[] unverified, byte[] signature) {
+    static boolean verify(SignatureType alg, Key verifyKey, byte[] unverified, byte[] signature) {
         try {
             if (verifyKey instanceof PublicKey) {
                 final PublicKey publicKey = (PublicKey) verifyKey;
@@ -119,7 +103,7 @@ abstract class JwtCrypto {
      *
      * @return the cipher text
      */
-    static byte[] encrypt(JwtEncryption alg, Key encryptKey, byte[] content) {
+    static byte[] encrypt(com.tylersuehr.jwt.EncryptionType alg, Key encryptKey, byte[] content) {
         try {
             final byte[] iv = generateRandomIv();
             final byte[] cipherText;
@@ -152,7 +136,7 @@ abstract class JwtCrypto {
      *
      * @return the plaintext
      */
-    static byte[] decrypt(JwtEncryption alg, Key decryptKey, byte[] content) {
+    static byte[] decrypt(com.tylersuehr.jwt.EncryptionType alg, Key decryptKey, byte[] content) {
         if (content == null || content.length <= IV_LENGTH)
             throw new IllegalArgumentException("Malformed content!");
         try {
@@ -194,6 +178,7 @@ abstract class JwtCrypto {
             throw new Error("No such provider or algorithm!");
         }
     }
+
 
     static final int IV_LENGTH = 16; // block size of AES cipher
     private static final String BC = BouncyCastleProvider.PROVIDER_NAME;

@@ -6,13 +6,15 @@
 
     <groupId>com.cybxsecurity</groupId>
     <artifactId>jwt</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <name>JSON Web Token (Java Library)</name>
     <description>A hardened implementation of JSON Web Token RFC 7519.</description>
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
+
     <developers>
         <developer>
             <name>Tyler Suehr</name>
@@ -30,7 +32,6 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
         <dependency>
             <groupId>org.bouncycastle</groupId>

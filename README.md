@@ -18,122 +18,49 @@ using the AES algorithm.
 ### Add to `pom.xml`
 ```xml
 <dependency>
-  <groupId>com.cybxsecurity</groupId>
-  <artifactId>jwt</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+    <groupId>com.cybxsecurity</groupId>
+    <artifactId>jwt</artifactId>
+    <version>2.0.0</version>
 </dependency>
 ```
 
-### Setup factory configuration
+### Creating a signed jwt:
 ```java
-// Create the configuration to use with the factory
-final ConfigurableJwtFactoryParams params = new ConfigurableJwtFactoryParams();
-params.setSignature(JwtSignature.EC256);
-params.setEncryption(JwtEncryption.AES_CTR);
-params.setIssuer("Sample Issuer");
-params.setAudience("Sample Audience");
-params.setSubject("Sample Subject");
-params.setNotBefore(System.currentTimeMillis());
-params.setNotAfter(System.currentTimeMillis() + (1000 * 60 * 60 * 2));
-params.setGenerateId(false);
+final Jwt jwt = new Jwt();
+jwt.setParameters(myCustomParamsInstance);
+jwt.getPayloadClaims().put("a", "abc");
+jwt.getPayloadClaims().put("b", 123);
+
+final String token = jwt.compact(mySignKey);
+// do something with jwt token
 ```
 
-### Creating a jwt
+### Creating an encrypted signed jwt:
 ```java
-// Access the configuration for jwt
-// Create the factory with configuration
-final JwtFactory factory = new JwtFactory();
-factory.setParams(getJwtFactoryParams());
+final Jwt jwt = new Jwt();
+jwt.setParameters(myCustomParamsInstance);
+jwt.getPayloadClaims().put("a", "abc");
+jwt.getPayloadClaims().put("b", 123);
 
-// Create the header claims of the token
-final JwtHeaderClaims header = new JwtHeaderClaims();
-header.setIssuer("something"); // overridden by factory params
-header.setAudience("something"); // overridden by factory params
-header.put("Custom", "abc123");
-
-// Create the payload claims of the token
-final JwtClaims payload = new JwtClaims();
-payload.put("customA", 123);
-payload.put("customB", "something");
-
-// Create and sign a jwt with the factory
-final Key signKey = getSuperSecretKey();
-final String jwt = factory.create(header, payload, signKey);
-
-System.out.println(jwt);
+final String token = jwt.compact(mySignKey, myEncryptKey);
+// do something with encrypted jwt token
 ```
 
-### Creating an encrypted jwt
+### Parsing and verifying a jwt:
 ```java
-// Access the configuration for jwt
-// Create the factory with configuration
-final JwtFactory factory = new JwtFactory();
-factory.setParams(getJwtFactoryParams());
-
-// Create the header claims of the token
-final JwtHeaderClaims header = new JwtHeaderClaims();
-header.setIssuer("something"); // overridden by factory params
-header.setAudience("something"); // overridden by factory params
-header.put("Custom", "abc123");
-
-// Create the payload claims of the token
-final JwtClaims payload = new JwtClaims();
-payload.put("customA", 123);
-payload.put("customB", "something");
-
-// Create and sign a jwt with the factory
-final Key signKey = getSuperSecretKey();
-final Key cryptKey = getSuperSecretEncryptionKey();
-final String jwt = factory.create(header, payload, signKey, cryptKey);
-
-System.out.println(jwt);
+final Jwt jwt = new Jwt();
+jwt.setParameters(myCustomParamsInstance);
+jwt.parse(jwtStr);
+jwt.verify(mySignKey);
 ```
 
-### Parsing and verifying a jwt
+### Parsing, decrypting, and verifying a jwt:
 ```java
-// Access the encoded jwt
-final String jwt = getJwt();
-
-// Access the configuration for jwt
-// Create the factory with configuration
-final JwtFactory factory = new JwtFactory();
-factory.setParams(getJwtFactoryParams());
-
-// Parse the jwt encoded string
-// This allows you to access claims without
-// having verified them yet... please remember
-// to verify them!
-final UnverifiedClaims claims = factory.parse(claims);
-final JwtHeaderClaims header = claims.getHeaderClaims();
-final JwtClaims payload = claims.getPayloadClaims();
-
-// Verify the claims when ready
-final Key signKey = getSuperSecretKey();
-factory.verify(claims, signKey);
-```
-
-### Parsing and verifying an encrypted jwt
-```java
-// Access the encoded jwt
-final String jwt = getJwt();
-
-// Access the configuration for jwt
-// Create the factory with configuration
-final JwtFactory factory = new JwtFactory();
-factory.setParams(getJwtFactoryParams());
-
-// Parse the jwt encoded string
-// This allows you to access claims without
-// having verified them yet... please remember
-// to verify them!
-final Key cryptKey = getSuperSecretEncryptionKey();
-final UnverifiedClaims claims = factory.parse(claims, cryptKey);
-final JwtHeaderClaims header = claims.getHeaderClaims();
-final JwtClaims payload = claims.getPayloadClaims();
-
-// Verify the claims when ready
-final Key signKey = getSuperSecretKey();
-factory.verify(claims, signKey);
+final Jwt jwt = new Jwt();
+jwt.setParameters(myCustomParamsInstance);
+jwt.parse(jwtStr);
+jwt.decrypt(myDecryptKey);
+jwt.verify(mySignKey);
 ```
 
 ## Contributors

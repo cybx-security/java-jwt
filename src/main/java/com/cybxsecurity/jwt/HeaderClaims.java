@@ -4,7 +4,7 @@ package com.cybxsecurity.jwt;
  * Represents the restricted claims of a jwt.
  * @author Tyler Suehr
  */
-public class HeaderClaims extends com.tylersuehr.jwt.Claims {
+public class HeaderClaims extends Claims {
     static final String SIGNATURE = "sig";
     static final String ENCRYPTION = "enc";
     static final String ISSUER = "iss";

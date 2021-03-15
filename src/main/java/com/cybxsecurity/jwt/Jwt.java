@@ -17,7 +17,7 @@ public class Jwt {
     static final Base64.Decoder DECODER = Base64.getUrlDecoder();
     static final Gson GSON = new Gson();
 
-    private final com.tylersuehr.jwt.Claims payload = new com.tylersuehr.jwt.Claims();
+    private final Claims payload = new Claims();
     private final HeaderClaims header = new HeaderClaims();
     private Params params;
 
@@ -44,7 +44,7 @@ public class Jwt {
      * Gets the payload claims of this jwt.
      * @return the claims
      */
-    public com.tylersuehr.jwt.Claims getPayloadClaims() {
+    public Claims getPayloadClaims() {
         if (isEncrypted())
             throw new IllegalStateException("Payload is encrypted!");
         if (isNotVerified())
@@ -150,7 +150,7 @@ public class Jwt {
         } else {
             final String payloadJsonStr = new String(payloadBytes, StandardCharsets.UTF_8);
             this.payload.clear();
-            this.payload.putAll(GSON.fromJson(payloadJsonStr, com.tylersuehr.jwt.Claims.class));
+            this.payload.putAll(GSON.fromJson(payloadJsonStr, Claims.class));
         }
 
         // Create the unverified object
@@ -165,12 +165,12 @@ public class Jwt {
      */
     public void decrypt(Key decryptKey) {
         if (isEncrypted()) {
-            final com.tylersuehr.jwt.EncryptionType algorithm = readEncryption(this.header);
+            final EncryptionType algorithm = readEncryption(this.header);
             if (algorithm != null) {
                 final byte[] payloadJsonUtf8 = Crypto.decrypt(algorithm, decryptKey, this.encryptedPayload);
                 final String payloadJsonStr = new String(payloadJsonUtf8, StandardCharsets.UTF_8);
                 this.payload.clear();
-                this.payload.putAll(GSON.fromJson(payloadJsonStr, com.tylersuehr.jwt.Claims.class));
+                this.payload.putAll(GSON.fromJson(payloadJsonStr, Claims.class));
                 this.encryptedPayload = null;
             }
         }
@@ -180,41 +180,41 @@ public class Jwt {
      * Verifies the integrity of this jwt.
      * @param verifyKey the key to verify claims with
      *
-     * @throws com.tylersuehr.jwt.JwtSignatureException if signature was not verified
-     * @throws com.tylersuehr.jwt.JwtClaimException if configured claim was invalid
-     * @throws com.tylersuehr.jwt.JwtExpirationException if used before the not before timestamp
-     * @throws com.tylersuehr.jwt.JwtExpirationException if used after the not after timestamp
+     * @throws JwtSignatureException if signature was not verified
+     * @throws JwtClaimException if configured claim was invalid
+     * @throws JwtExpirationException if used before the not before timestamp
+     * @throws JwtExpirationException if used after the not after timestamp
      */
     public void verify(Key verifyKey) {
         if (isNotVerified()) {
             // Verify the signature firstly
             final SignatureType algorithm = readSignature(this.header);
             if (!Crypto.verify(algorithm, verifyKey, unverified.content, unverified.signature))
-                throw new com.tylersuehr.jwt.JwtSignatureException();
+                throw new JwtSignatureException();
 
             // Verifies all other configured parameters
             final Params p = this.params;
             if (p != null) {
                 final String issuer = p.getIssuer();
                 if (issuer != null && !issuer.equals(this.header.getIssuer()))
-                    throw new com.tylersuehr.jwt.JwtClaimException("issuer");
+                    throw new JwtClaimException("issuer");
                 final String audience = p.getAudience();
                 if (audience != null && !audience.equals(this.header.getAudience()))
-                    throw new com.tylersuehr.jwt.JwtClaimException("audience");
+                    throw new JwtClaimException("audience");
                 final String subject = p.getSubject();
                 if (subject != null && !subject.equals(this.header.getSubject()))
-                    throw new com.tylersuehr.jwt.JwtClaimException("subject");
+                    throw new JwtClaimException("subject");
                 final Long tokenNotBefore = this.header.getNotBefore();
                 if (tokenNotBefore != null) {
                     final long nowSecs = System.currentTimeMillis() / 1000L;
                     if (nowSecs < tokenNotBefore)
-                        throw com.tylersuehr.jwt.JwtExpirationException.notBefore(tokenNotBefore);
+                        throw JwtExpirationException.notBefore(tokenNotBefore);
                 }
                 final Long tokenNotAfter = this.header.getNotAfter();
                 if (tokenNotAfter != null) {
                     final long nowSecs = System.currentTimeMillis() / 1000L;
                     if (nowSecs > tokenNotAfter)
-                        throw com.tylersuehr.jwt.JwtExpirationException.notAfter(tokenNotAfter);
+                        throw JwtExpirationException.notAfter(tokenNotAfter);
                 }
             }
 
@@ -236,7 +236,7 @@ public class Jwt {
             final SignatureType signature = p.getSignature();
             if (signature != null)
                 this.header.setSignature(signature.name());
-            final com.tylersuehr.jwt.EncryptionType encryption = p.getEncryption();
+            final EncryptionType encryption = p.getEncryption();
             if (encryption != null)
                 this.header.setEncryption(encryption.name());
             final String issuer = p.getIssuer();
@@ -277,9 +277,9 @@ public class Jwt {
         return SignatureType.valueOf(algorithm);
     }
 
-    com.tylersuehr.jwt.EncryptionType readEncryption(HeaderClaims claims) {
+    EncryptionType readEncryption(HeaderClaims claims) {
         final String algorithm = claims.getEncryption();
-        return algorithm == null ? null : com.tylersuehr.jwt.EncryptionType.valueOf(algorithm);
+        return algorithm == null ? null : EncryptionType.valueOf(algorithm);
     }
 
     /**
@@ -287,7 +287,7 @@ public class Jwt {
      */
     public interface Params {
         default SignatureType getSignature() { return SignatureType.HS256; }
-        default com.tylersuehr.jwt.EncryptionType getEncryption() { return null; }
+        default EncryptionType getEncryption() { return null; }
         default String getIssuer() { return null; }
         default String getAudience() { return null; }
         default String getSubject() { return null; }
@@ -315,9 +315,9 @@ public class Jwt {
      */
     static class SnapshotParams {
         final SignatureType signature;
-        final com.tylersuehr.jwt.EncryptionType encryption;
+        final EncryptionType encryption;
 
-        SnapshotParams(SignatureType s, com.tylersuehr.jwt.EncryptionType e) {
+        SnapshotParams(SignatureType s, EncryptionType e) {
             this.signature = s;
             this.encryption = e;
         }

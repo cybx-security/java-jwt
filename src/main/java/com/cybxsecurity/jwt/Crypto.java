@@ -103,7 +103,7 @@ class Crypto {
      *
      * @return the cipher text
      */
-    static byte[] encrypt(com.tylersuehr.jwt.EncryptionType alg, Key encryptKey, byte[] content) {
+    static byte[] encrypt(EncryptionType alg, Key encryptKey, byte[] content) {
         try {
             final byte[] iv = generateRandomIv();
             final byte[] cipherText;
@@ -136,7 +136,7 @@ class Crypto {
      *
      * @return the plaintext
      */
-    static byte[] decrypt(com.tylersuehr.jwt.EncryptionType alg, Key decryptKey, byte[] content) {
+    static byte[] decrypt(EncryptionType alg, Key decryptKey, byte[] content) {
         if (content == null || content.length <= IV_LENGTH)
             throw new IllegalArgumentException("Malformed content!");
         try {

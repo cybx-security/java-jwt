@@ -8,7 +8,7 @@ import java.util.Date;
  * Thrown when a jwt has expired not before or not after.
  * @author Tyler Suehr
  */
-public class JwtExpirationException extends com.tylersuehr.jwt.JwtException {
+public class JwtExpirationException extends JwtException {
     static final DateFormat DF = new SimpleDateFormat("MM/dd/yyyy'@'hh:mm:ss a");
 
     static JwtExpirationException notAfter(long timestampSecs) {

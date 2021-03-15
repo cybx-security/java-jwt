@@ -72,7 +72,7 @@ class JwtTest {
 
     @Test
     void parseNonEncrypted() {
-        final com.tylersuehr.jwt.ConfigurableParams params = new com.tylersuehr.jwt.ConfigurableParams();
+        final ConfigurableParams params = new ConfigurableParams();
 
         final Jwt jwt = new Jwt();
         jwt.setParameters(params);
@@ -92,7 +92,7 @@ class JwtTest {
 
     @Test
     void parseEncrypted() {
-        final com.tylersuehr.jwt.ConfigurableParams params = new com.tylersuehr.jwt.ConfigurableParams();
+        final ConfigurableParams params = new ConfigurableParams();
         params.setEncryption(EncryptionType.AES_CTR);
 
         final Jwt jwt = new Jwt();
@@ -116,7 +116,7 @@ class JwtTest {
 
     @Test
     void verifyNonEncrypted() {
-        final com.tylersuehr.jwt.ConfigurableParams params = new com.tylersuehr.jwt.ConfigurableParams();
+        final ConfigurableParams params = new ConfigurableParams();
 
         final Jwt jwt = new Jwt();
         jwt.setParameters(params);
@@ -134,7 +134,7 @@ class JwtTest {
 
     @Test
     void verifyEncrypted() {
-        final com.tylersuehr.jwt.ConfigurableParams params = new com.tylersuehr.jwt.ConfigurableParams();
+        final ConfigurableParams params = new ConfigurableParams();
         params.setEncryption(EncryptionType.AES_CTR);
 
         final Jwt jwt = new Jwt();
@@ -160,7 +160,7 @@ class JwtTest {
 
     @Test
     void verifyNonEncryptedTampered() {
-        final com.tylersuehr.jwt.ConfigurableParams params = new com.tylersuehr.jwt.ConfigurableParams();
+        final ConfigurableParams params = new ConfigurableParams();
 
         final Jwt jwt = new Jwt();
         jwt.setParameters(params);
@@ -183,7 +183,7 @@ class JwtTest {
 
     @Test
     void verifyEncryptionGetFail() {
-        final com.tylersuehr.jwt.ConfigurableParams params = new com.tylersuehr.jwt.ConfigurableParams();
+        final ConfigurableParams params = new ConfigurableParams();
         params.setEncryption(EncryptionType.AES_CTR);
 
         final Jwt jwt = new Jwt();
@@ -205,7 +205,7 @@ class JwtTest {
     void verifyInvalidIssuer() {
         final String issuer = "com.tylersuehr";
 
-        final com.tylersuehr.jwt.ConfigurableParams params = new com.tylersuehr.jwt.ConfigurableParams();
+        final ConfigurableParams params = new ConfigurableParams();
         params.setEncryption(EncryptionType.AES_CTR);
         params.setIssuer(issuer);
 
@@ -231,7 +231,7 @@ class JwtTest {
     void verifyInvalidAudience() {
         final String audience = "com.tylersuehr";
 
-        final com.tylersuehr.jwt.ConfigurableParams params = new com.tylersuehr.jwt.ConfigurableParams();
+        final ConfigurableParams params = new ConfigurableParams();
         params.setEncryption(EncryptionType.AES_CTR);
         params.setAudience(audience);
 
@@ -257,7 +257,7 @@ class JwtTest {
     void verifyInvalidSubject() {
         final String subject = "com.tylersuehr";
 
-        final com.tylersuehr.jwt.ConfigurableParams params = new com.tylersuehr.jwt.ConfigurableParams();
+        final ConfigurableParams params = new ConfigurableParams();
         params.setEncryption(EncryptionType.AES_CTR);
         params.setSubject(subject);
 
@@ -281,7 +281,7 @@ class JwtTest {
 
     @Test
     void verifyExpired() throws Exception {
-        final com.tylersuehr.jwt.ConfigurableParams params = new com.tylersuehr.jwt.ConfigurableParams();
+        final ConfigurableParams params = new ConfigurableParams();
         params.setEncryption(EncryptionType.AES_CTR);
         params.setNotAfter(1L);
 
@@ -306,7 +306,7 @@ class JwtTest {
 
     @Test
     void verifyInvalidNotBefore() throws Exception {
-        final com.tylersuehr.jwt.ConfigurableParams params = new com.tylersuehr.jwt.ConfigurableParams();
+        final ConfigurableParams params = new ConfigurableParams();
         params.setEncryption(EncryptionType.AES_CTR);
         params.setNotBefore(7200L);
 
